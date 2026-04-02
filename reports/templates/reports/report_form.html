@@ -1,0 +1,60 @@
+{% extends 'reports/base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div class="card shadow border-0">
+    <div class="card-header bg-white text-primary fw-bold">
+        <h4>Log a New Fault</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="{% url 'report_fault' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            
+            <div class="d-grid gap-3 mt-4">
+                <button type="button" class="btn btn-outline-primary py-2 fw-bold" onclick="alert('📍 GPS Coordinates Captured! (Simulated for assignment)')">
+                    📍 Auto-Detect My Location (GPS)
+                </button>
+
+                <div class="mt-2 p-3 bg-light text-center rounded shadow-sm" style="border: 2px dashed #6c757d;">
+                    <h6 class="text-muted fw-bold mb-3">Interactive Map Preview</h6>
+                    
+                    <div id="real-map" class="rounded border mb-3" style="height: 250px; width: 100%; z-index: 1;"></div>
+
+                    <small class="text-muted d-block">🖐️ You can zoom in and drag the blue pin to fine-tune the exact location.</small>
+                </div>
+                
+                <button type="submit" class="btn btn-success btn-lg shadow fw-bold mt-2">Submit Report</button>
+                
+                <a href="{% url 'dashboard' %}" class="btn btn-link text-center text-muted">Cancel & Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. Initialize the map and set the default view to Kimberley, South Africa
+        var map = L.map('real-map').setView([-28.7282, 24.7623], 13);
+
+        // 2. Load the actual street map tiles from OpenStreetMap (Free, no API key needed)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 3. Add a draggable marker to the center of Kimberley
+        var marker = L.marker([-28.7282, 24.7623], {
+            draggable: true
+        }).addTo(map);
+
+        // 4. (Optional) Show an alert when the user finishes dragging the pin
+        marker.on('dragend', function (e) {
+            alert("📍 Pin location updated manually!");
+        });
+    });
+</script>
+
+{% endblock %}

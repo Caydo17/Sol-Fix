@@ -1,0 +1,51 @@
+{% extends 'reports/base.html' %}
+{% block content %}
+<div class="text-center mb-4">
+    <a href="{% url 'report_fault' %}" class="btn btn-danger btn-lg shadow rounded-pill px-5 py-3 fw-bold">📢 REPORT NEW FAULT</a>
+</div>
+
+<div class="alert alert-success alert-dismissible fade show shadow-sm mb-4 text-start" role="alert">
+    <strong>✅ Report Submitted Successfully!</strong> 
+    Your fault has been logged with the Kimberley municipality. You will receive progress alerts here.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<h4 class="mb-3 text-secondary">Community Status Map (Live Feed)</h4>
+<div class="row">
+    {% for report in reports %}
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-start border-5 {% if report.status == 'pending' %}border-danger{% elif report.status == 'assigned' %}border-warning{% else %}border-success{% endif %}">
+            <div class="card-body">
+                <h5 class="card-title">{{ report.title }}</h5>
+                {% if report.image %}
+                    <img src="{{ report.image.url }}" class="img-fluid rounded mb-2 border" alt="Fault photo">
+                {% endif %}
+                <span class="badge bg-secondary mb-2">{{ report.get_category_display }}</span>
+                
+                <small class="text-muted d-block mb-3">Reported: {{ report.created_at|date:"M d, H:i" }}</small>
+
+                <hr>
+
+                <div class="mb-3 text-center">
+                    <span class="badge bg-warning text-dark px-3 py-2 border border-warning shadow-sm w-100" style="font-size: 0.9rem;">
+                        Status: {{ report.get_status_display|default:"Pending Assessment" }}
+                    </span>
+                </div>
+
+                <button type="button" class="btn btn-sm btn-outline-success w-100 fw-bold shadow-sm mb-2" onclick="alert('✅ Fault verified! Thank you for keeping the community map accurate.')">
+                    👍 Verify this Fault
+                </button>
+
+                <div class="text-end">
+                    <a href="{% url 'delete_fault' report.id %}" class="btn btn-sm btn-outline-danger">🗑️ Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center text-muted mt-5">
+        <p>No active reports in Kimberley yet. The city is looking good!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'reports/base.html' %}
+
+{% block content %}
+<div class="card shadow border-0 mt-5">
+    <div class="card-body text-center p-5">
+        <h2 class="text-primary fw-bold">About SOL-FIX Kimberley</h2>
+        <p class="lead mt-3">
+            This platform was built to help the Kimberley community easily report faults like potholes, broken streetlights, and water leaks directly to the municipality. 
+        </p>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-primary mt-3">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
